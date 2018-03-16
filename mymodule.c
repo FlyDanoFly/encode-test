@@ -27,34 +27,20 @@ static PyObject* py_myOtherFunction(PyObject* self, PyObject* args)
 static PyObject* py_myWowFunction(PyObject* self, PyObject* args)
 {
   PyObject *obj;
-  long l;
   PyArg_ParseTuple(args, "O", &obj);
-  //printf("Hello world\n");
-  //printf("Hello world %ld\n", l);
-  //printf("Hello world %p\n", obj);
-  //printf("Hello world %s\n", Py_TYPE(obj)->tp_name);
-  //printf("Hello world %ld\n", Py_TYPE(obj)->tp_basicsize);
-  //printf("Hello world %ld\n", Py_TYPE(obj)->tp_itemsize);
-  //  printf("Hello world %ld\n", Py_SIZE(obj));
-  //  printf("Hello world %ld\n", Py_SIZE(obj));
-  //printf("sequence size %ld\n", PySequence_Length(obj));
-  //printf("sequence check %d\n", PySequence_Check(obj));
-  //printf("iter check %d\n", PyIter_Check(obj));
-  //printf("number check %d\n", PyNumber_Check(obj));
-  //printf("number long %p\n", Py_TYPE(obj)->tp_as_buffer);
-  //printf("yo\n");
 
+  // TODO: error/sanity checking
+
+  // This will do a base 36 conversion into the alphabet 0123456789abcdefghijklmnopqrstuvwxyz
+  // It returns a BASE# leader (e.g. 36#) which needs to be removed
   PyObject *np;
   np = PyNumber_ToBase(obj, 36);
-  //printf("PyString_Check %d\n", PyString_Check(np));
-  //printf("PyString_AsString %s\n", PyString_AsString(np));
-  return np;
-  //char const *s2;
-  //printf(" new base 36 string? %s\n", s2);
-  //char *s = "Hello from C!";
-  //printf("return;\n");
-  //return np;
-  //return Py_BuildValue("s", s);
+
+  // Remove the leader
+  char const *string_without_leader = &PyString_AS_STRING(np)[3];
+  PyObject *np2;
+  np2 = PyString_FromString(&PyString_AS_STRING(np)[3]);
+  return np2;
 }
 
 /*
