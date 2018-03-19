@@ -257,8 +257,7 @@ static PyObject* py_myfn(PyObject* self, PyObject* args)
   PyObject *rem;
   PyObject *div = obj;
   PyObject *mod;
-  int i;
-  for (i = 0; i < 30; ++i)
+  for (int i = 0; i < 30; ++i)
     buffer[i] = 0;
   char *p = &buffer[30-1];
   unsigned long long whee;
@@ -300,8 +299,7 @@ static PyObject* py_myfn2(PyObject* self, PyObject* args)
   PyObject *rem;
   PyObject *div = obj;
   PyObject *mod;
-  int i;
-  for (i = 0; i < 30; ++i)
+  for (int i = 0; i < 30; ++i)
     buffer[i] = 0;
   char *p = &buffer[30-1];
   while (PyLong_AsSsize_t(div) != 0L) {
