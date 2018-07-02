@@ -1,13 +1,12 @@
 from setuptools import setup, Extension
 
-setup(name='funniest',
+setup(name='base36encode',
       version='0.1',
-      description='The funniest joke in the world',
-      url='http://github.com/storborg/funniest',
-      author='Flying Circus',
-      author_email='flyingcircus@example.com',
+      description='Ultra fast base36 encoder for positive ints up to 128 bits (0 <= x <= 2^128)',
+      url='http://github.com/FlyDanoFly/encode-test.git',
+      author='Dano!',
+      author_email='dano@skilljar.com',
       license='MIT',
-      packages=['fun'],
-      ext_modules=[Extension('mymodule', ['mymodule.c'])],
+      ext_modules=[Extension('base36encode', ['base36encode.c'])],
       zip_safe=False
       )

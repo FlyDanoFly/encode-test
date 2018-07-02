@@ -3,13 +3,19 @@ The logic works!
 And... this needs cleaning!
 
 TODO:
+	Finish profiling on profile production dyno to get an idea of speeds
+	Narrow down to 1 way of doing it: current winning one is trike_div3
     Cleanup main code
     Figure out a naming scheme, maybe:
-        from fastbase36 import base36encode
-    Fix pass in 0, probably if i < 36 return that encoded?
+        from fastbase36 import base36encode 
+        from fastbase36 import base36encode128 (only does 128 bit ints, actually could do 128+54 but will constrain) 
+        from fastbase36 import base36encode128 (only does 128 bit ints, actually could do 128+54 but will constrain)
+		
+    x Fix pass in 0, probably if i < 36 return that encoded?
     Error checking! Pass in a string? Pass in a number that's too big?
     Add some tests
     Have the python base36encode in there? How to proprely package it?
+        - no or make it slow
     Test with database exporting, old vs new way!
     Packaging!
     Public or private repository?
