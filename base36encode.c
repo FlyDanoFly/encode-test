@@ -317,9 +317,12 @@ static PyObject* py_base36encode1(PyObject* self, PyObject* args) {
     
     Py_DECREF(number);
     Py_DECREF(rem);
+    Py_DECREF(divmod_tuple);
     number = quot;
+    
   } while (PyObject_IsTrue(number));
   Py_DECREF(number);
+  Py_DECREF(base);
   encode_buffer += 1;
 
   // Check the sentinel  
