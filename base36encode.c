@@ -327,9 +327,9 @@ static PyObject* py_base36encode1(PyObject* self, PyObject* args) {
 
   // Check the sentinel  
   if (buffer[0] != '-' || buffer[buffer_size - 1] != '-') {
-    printf("base36encode4(): BUFFER OVERRUN!\n");
-    printf("base36encode4(): BUFFER OVERRUN!\n");
-    printf("base36encode4(): BUFFER OVERRUN!\n");
+    printf("base36encode1(): BUFFER OVERRUN!\n");
+    printf("base36encode1(): BUFFER OVERRUN!\n");
+    printf("base36encode1(): BUFFER OVERRUN!\n");
   }
   
   PyObject *result = Py_BuildValue("s", encode_buffer);
@@ -372,9 +372,9 @@ static PyObject* py_base36encode2(PyObject* self, PyObject* args) {
 
   // Check the sentinel
   if (buffer[0] != '-' || buffer[buffer_size - 1] != '-') {
-    printf("base36encode1(): BUFFER OVERRUN!\n");
-    printf("base36encode1(): BUFFER OVERRUN!\n");
-    printf("base36encode1(): BUFFER OVERRUN!\n");
+    printf("base36encode2(): BUFFER OVERRUN!\n");
+    printf("base36encode2(): BUFFER OVERRUN!\n");
+    printf("base36encode2(): BUFFER OVERRUN!\n");
   }
   
   PyObject *result = Py_BuildValue("s", encode_buffer);
@@ -408,8 +408,8 @@ static PyObject* py_base36encode3(PyObject* self, PyObject* args) {
 
   if ((high == 0) && (low < 36)) {
     // short circuit case, the int < base
-    buffer[0] = encoding_alphabet[low];
-    buffer[1] = '\0';
+    encode_buffer[0] = encoding_alphabet[low];
+    encode_buffer[1] = '\0';
   }
   else {
       encode_buffer = base36_encode_128_10_58_58(high, low, encode_buffer);
@@ -433,35 +433,40 @@ static PyObject* py_base36encode4(PyObject* self, PyObject* args) {
 
   unsigned long long llints[30];
   int i;
-  if (0) {
-  int greater_than_128_bits = get_and_validate_128_bit_number(number, &llints[1], &llints[0]);
-  Py_DECREF(number);
-  i = 2;
+
   
-  if (greater_than_128_bits) {
-    PyErr_SetString(PyExc_ValueError, "parameter must be be 128 bits");
-    return NULL;
+  if (0) {
+    // Optimization: just get two 64 bit ints
+    int greater_than_128_bits = get_and_validate_128_bit_number(number, &llints[1], &llints[0]);
+    Py_DECREF(number);
+    i = 2;
+  
+    if (greater_than_128_bits) {
+      PyErr_SetString(PyExc_ValueError, "parameter must be be 128 bits");
+      return NULL;
+    }
   }
-  }
+  
   if (1) {
-
-  PyObject *new_shifted;
-  PyObject *shifted = number;
-  Py_INCREF(shifted);
-  PyObject *to_shift = PyLong_FromLong(64 - 6);
-  unsigned long long mask = 0x03ffffffffffffff;
-  i = 0;
-  do {
-    llints[i] = PyLong_AsUnsignedLongLongMask(shifted) & mask;
-    new_shifted = PyNumber_Rshift(shifted, to_shift);
-    Py_DECREF(shifted);
-    shifted = new_shifted;
-    i += 1;
-  } while (PyObject_IsTrue(shifted));
-
-  Py_DECREF(to_shift);
-  Py_DECREF(new_shifted);
-  Py_DECREF(number);
+    // Get an array of ints
+    // TODO: proper bounds checking
+    PyObject *new_shifted;
+    PyObject *shifted = number;
+    Py_INCREF(shifted);
+    PyObject *to_shift = PyLong_FromLong(64 - 6);
+    unsigned long long mask = 0x03ffffffffffffff;
+    i = 0;
+    do {
+      llints[i] = PyLong_AsUnsignedLongLongMask(shifted) & mask;
+      new_shifted = PyNumber_Rshift(shifted, to_shift);
+      Py_DECREF(shifted);
+      shifted = new_shifted;
+      i += 1;
+    } while (PyObject_IsTrue(shifted));
+    
+    Py_DECREF(to_shift);
+    Py_DECREF(new_shifted);
+    Py_DECREF(number);
   }
   
   // The biggest buffer needed to base36 encode a 128 bit int is 26 bytes = 25 bytes + 1 terminal
@@ -471,17 +476,11 @@ static PyObject* py_base36encode4(PyObject* self, PyObject* args) {
   char *buffer = (char *) malloc(buffer_size * sizeof(char));
   buffer[0] = buffer[buffer_size - 1] = '-';
   char *encode_buffer = buffer + 1;
-  //  const int sz = 26;
-  //  char big_buffer[sz+2]; // for a sentry of '-' on each end
-  //  char *buffer = big_buffer + 1;
-  //  char *p = buffer;
-  //  big_buffer[0] = '-';
-  //  big_buffer[sz+1] = '-';
 
   if ((i == 1) && (llints[0] < 36)) {
     // short circuit case, the int < base
-    buffer[0] = encoding_alphabet[llints[0]];
-    buffer[1] = '\0';
+    encode_buffer[0] = encoding_alphabet[llints[0]];
+    encode_buffer[1] = '\0';
   }
   else {
     encode_buffer = base36_encode_n_58(llints, i, encode_buffer);
@@ -489,9 +488,9 @@ static PyObject* py_base36encode4(PyObject* self, PyObject* args) {
 
   // Check the sentinel
   if (buffer[0] != '-' || buffer[buffer_size - 1] != '-') {
-    printf("base36encode2(): BUFFER OVERRUN!\n");
-    printf("base36encode2(): BUFFER OVERRUN!\n");
-    printf("base36encode2(): BUFFER OVERRUN!\n");
+    printf("base36encode4(): BUFFER OVERRUN!\n");
+    printf("base36encode4(): BUFFER OVERRUN!\n");
+    printf("base36encode4(): BUFFER OVERRUN!\n");
   }
 
   PyObject *result = Py_BuildValue("s", encode_buffer);
